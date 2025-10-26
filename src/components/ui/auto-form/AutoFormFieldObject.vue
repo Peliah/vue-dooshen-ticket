@@ -23,11 +23,12 @@ const shapes = computed(() => {
 
   if (!props.schema)
     return
-  const shape = getBaseSchema(props.schema)?.shape
+  const baseSchema = getBaseSchema(props.schema)
+  const shape = (baseSchema && 'shape' in baseSchema._def ? baseSchema._def.shape : undefined)
   if (!shape)
     return
   Object.keys(shape).forEach((name) => {
-    const item = shape[name] as ZodAny
+    const item = shape[name as keyof typeof shape] as ZodAny
     const baseItem = getBaseSchema(item) as ZodAny
     let options = (baseItem && 'values' in baseItem._def) ? baseItem._def.values as string[] : undefined
     if (!Array.isArray(options) && typeof options === 'object')
@@ -37,7 +38,7 @@ const shapes = computed(() => {
       type: getBaseType(item),
       default: getDefaultValueInZodStack(item),
       options,
-      required: !['ZodOptional', 'ZodNullable'].includes(item._def.typeName),
+      required: !['ZodOptional', 'ZodNullable'].includes((item._def as any).typeName),
       schema: item,
     }
   })

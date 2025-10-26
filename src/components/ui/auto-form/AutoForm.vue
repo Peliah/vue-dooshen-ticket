@@ -68,7 +68,7 @@ const formComponentProps = computed(() => {
     }
   }
   else {
-    const formSchema = toTypedSchema(props.schema)
+    const formSchema = toTypedSchema(props.schema as any)
     return {
       keepValues: true,
       validationSchema: formSchema,
