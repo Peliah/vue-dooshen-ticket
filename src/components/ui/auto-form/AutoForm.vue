@@ -21,7 +21,7 @@ const emits = defineEmits<{
 }>()
 
 const { dependencies } = toRefs(props)
-provideDependencies(dependencies)
+provideDependencies(dependencies as any)
 
 const shapes = computed(() => {
   // @ts-expect-error ignore {} not assignable to object
@@ -39,7 +39,7 @@ const shapes = computed(() => {
       type: getBaseType(item),
       default: getDefaultValueInZodStack(item),
       options,
-      required: !['ZodOptional', 'ZodNullable'].includes(item._def.typeName),
+      required: !['ZodOptional', 'ZodNullable'].includes((item._def as any).typeName),
       schema: baseItem,
     }
   })
@@ -64,7 +64,7 @@ const formComponent = computed(() => props.form ? 'form' : Form)
 const formComponentProps = computed(() => {
   if (props.form) {
     return {
-      onSubmit: props.form.handleSubmit(val => emits('submit', val)),
+      onSubmit: props.form.handleSubmit(val => emits('submit', val as z.infer<T>)),
     }
   }
   else {
@@ -72,7 +72,7 @@ const formComponentProps = computed(() => {
     return {
       keepValues: true,
       validationSchema: formSchema,
-      onSubmit: (val: GenericObject) => emits('submit', val),
+      onSubmit: (val: GenericObject) => emits('submit', val as z.infer<T>),
     }
   }
 })
