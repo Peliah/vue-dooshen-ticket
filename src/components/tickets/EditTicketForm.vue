@@ -18,7 +18,7 @@ const isSubmitting = ref(false)
 const errors = ref<Record<string, string>>({})
 
 const formData = ref<UpdateTicket>({
-  id: props.ticket.id,
+  id: props.ticket.id ?? '',
   title: props.ticket.title,
   description: props.ticket.description || '',
   status: props.ticket.status,
